@@ -1,6 +1,5 @@
 ---
 - name: Install Firefox ESR Bubblewrap dependencies
-  become: true
   ansible.builtin.apt:
     name:
       - firefox-esr
@@ -11,7 +10,6 @@
     update_cache: true
 
 - name: Ensure launcher directory exists
-  become: true
   ansible.builtin.file:
     path: "{{ bwrap_firefox_launcher_path | dirname }}"
     state: directory
@@ -20,7 +18,6 @@
     mode: "0755"
 
 - name: Install Firefox ESR Bubblewrap launcher
-  become: true
   ansible.builtin.template:
     src: start-firefox-esr-bwrap.sh.j2
     dest: "{{ bwrap_firefox_launcher_path }}"
@@ -29,7 +26,6 @@
     mode: "0755"
 
 - name: Ensure desktop application directory exists
-  become: true
   ansible.builtin.file:
     path: "{{ bwrap_firefox_desktop_path | dirname }}"
     state: directory
@@ -38,7 +34,6 @@
     mode: "0755"
 
 - name: Install Firefox ESR Bubblewrap desktop launcher
-  become: true
   ansible.builtin.template:
     src: firefox-esr-bwrap.desktop.j2
     dest: "{{ bwrap_firefox_desktop_path }}"
