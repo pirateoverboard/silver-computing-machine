@@ -1,0 +1,48 @@
+---
+- name: Install Firefox ESR Bubblewrap dependencies
+  become: true
+  ansible.builtin.apt:
+    name:
+      - firefox-esr
+      - bubblewrap
+      - xdg-user-dirs
+      - desktop-file-utils
+    state: present
+    update_cache: true
+
+- name: Ensure launcher directory exists
+  become: true
+  ansible.builtin.file:
+    path: "{{ bwrap_firefox_launcher_path | dirname }}"
+    state: directory
+    owner: root
+    group: root
+    mode: "0755"
+
+- name: Install Firefox ESR Bubblewrap launcher
+  become: true
+  ansible.builtin.template:
+    src: start-firefox-esr-bwrap.sh.j2
+    dest: "{{ bwrap_firefox_launcher_path }}"
+    owner: root
+    group: root
+    mode: "0755"
+
+- name: Ensure desktop application directory exists
+  become: true
+  ansible.builtin.file:
+    path: "{{ bwrap_firefox_desktop_path | dirname }}"
+    state: directory
+    owner: root
+    group: root
+    mode: "0755"
+
+- name: Install Firefox ESR Bubblewrap desktop launcher
+  become: true
+  ansible.builtin.template:
+    src: firefox-esr-bwrap.desktop.j2
+    dest: "{{ bwrap_firefox_desktop_path }}"
+    owner: root
+    group: root
+    mode: "0644"
+  notify: Update desktop database

@@ -1,0 +1,8 @@
+---
+galaxy_info:
+  author: Daniel
+  description: Install Firefox ESR Bubblewrap launcher
+  license: MIT
+  min_ansible_version: "2.15"
+
+dependencies: []

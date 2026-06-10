@@ -1,0 +1,74 @@
+#!/usr/bin/sh
+
+unset DISPLAY
+unset ICEAUTHORITY
+unset SESSION_MANAGER
+
+export MOZ_ENABLE_WAYLAND=1
+export GDK_BACKEND=wayland
+export XDG_SESSION_TYPE=wayland
+export XDG_CONFIG_HOME="${XDG_CONFIG_HOME:-$HOME/.config}"
+
+if [ -f "$HOME/.config/user-dirs.dirs" ]; then
+    . "$HOME/.config/user-dirs.dirs"
+fi
+
+export XDG_DOWNLOAD_DIR="${XDG_DOWNLOAD_DIR:-$HOME/Downloads}"
+
+mkdir -p "$HOME/.mozilla"
+mkdir -p "$XDG_DOWNLOAD_DIR"
+
+bwrap \
+--symlink usr/lib /lib \
+--symlink usr/lib64 /lib64 \
+--symlink usr/bin /bin \
+--symlink usr/bin /sbin \
+--ro-bind /usr/lib /usr/lib \
+--ro-bind-try /usr/lib64 /usr/lib64 \
+--ro-bind /usr/bin /usr/bin \
+--ro-bind /usr/lib/firefox-esr /usr/lib/firefox-esr \
+--ro-bind /usr/share/applications /usr/share/applications \
+--ro-bind /usr/share/gtk-3.0 /usr/share/gtk-3.0 \
+--ro-bind /usr/share/fontconfig /usr/share/fontconfig \
+--ro-bind-try /usr/share/lintian/overrides/libicu76 /usr/share/lintian/overrides/libicu76 \
+--ro-bind-try /usr/share/drirc.d /usr/share/drirc.d \
+--ro-bind /usr/share/fonts /usr/share/fonts \
+--ro-bind /usr/share/glib-2.0 /usr/share/glib-2.0 \
+--ro-bind /usr/share/glvnd /usr/share/glvnd \
+--ro-bind /usr/share/icons /usr/share/icons \
+--ro-bind /usr/share/libdrm /usr/share/libdrm \
+--ro-bind /usr/share/mime /usr/share/mime \
+--ro-bind /usr/share/X11/xkb /usr/share/X11/xkb \
+--ro-bind /etc/fonts /etc/fonts \
+--ro-bind /etc/resolv.conf /etc/resolv.conf \
+--ro-bind /usr/share/ca-certificates /usr/share/ca-certificates \
+--ro-bind /etc/ssl /etc/ssl \
+--ro-bind-try /etc/ca-certificates /etc/ca-certificates \
+--dir "$XDG_RUNTIME_DIR" \
+--ro-bind-try "$XDG_RUNTIME_DIR/pulse" "$XDG_RUNTIME_DIR/pulse" \
+--ro-bind-try "$XDG_RUNTIME_DIR/wayland-0" "$XDG_RUNTIME_DIR/wayland-0" \
+--ro-bind-try "$XDG_RUNTIME_DIR/bus" "$XDG_RUNTIME_DIR/bus" \
+--dev /dev \
+--dev-bind-try /dev/dri /dev/dri \
+--ro-bind-try /sys/dev/char /sys/dev/char \
+--ro-bind-try /sys/devices/pci0000:00 /sys/devices/pci0000:00 \
+--proc /proc \
+--tmpfs /tmp \
+--bind "$HOME/.mozilla" "$HOME/.mozilla" \
+--bind "$XDG_DOWNLOAD_DIR" "$XDG_DOWNLOAD_DIR" \
+--bind-try "$HOME/.config/transmission" "$HOME/.config/transmission" \
+--unsetenv DISPLAY \
+--unsetenv ICEAUTHORITY \
+--unsetenv SESSION_MANAGER \
+--setenv HOME "$HOME" \
+--setenv GTK_THEME "{{ bwrap_firefox_theme }}" \
+--setenv MOZ_ENABLE_WAYLAND 1 \
+--setenv GDK_BACKEND wayland \
+--setenv XDG_SESSION_TYPE wayland \
+--setenv PATH /usr/bin:/bin \
+--hostname "{{ bwrap_firefox_hostname }}" \
+--unshare-all \
+--share-net \
+--die-with-parent \
+--new-session \
+/usr/bin/firefox-esr --no-remote "$@"

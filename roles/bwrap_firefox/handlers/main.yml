@@ -1,0 +1,6 @@
+---
+- name: Update desktop database
+  ansible.builtin.command:
+    cmd: update-desktop-database /usr/share/applications
+  changed_when: false
+  failed_when: false

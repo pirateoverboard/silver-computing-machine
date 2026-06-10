@@ -1,0 +1,6 @@
+---
+- name: Configure Firefox ESR Bubblewrap launcher
+  hosts: "{{ target_hosts | default('localhost') }}"
+
+  roles:
+    - bwrap_firefox

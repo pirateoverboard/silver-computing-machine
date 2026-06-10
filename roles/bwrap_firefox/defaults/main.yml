@@ -1,0 +1,9 @@
+---
+bwrap_firefox_launcher_path: /usr/local/bin/start-firefox-esr-bwrap
+bwrap_firefox_desktop_path: /usr/local/share/applications/firefox-esr-bwrap.desktop
+
+bwrap_firefox_desktop_name: Firefox ESR (Bwrap Sandbox)
+bwrap_firefox_desktop_comment: Run Firefox ESR inside a Bubblewrap sandbox
+
+bwrap_firefox_theme: "Adwaita:dark"
+bwrap_firefox_hostname: "RESTRICTED"
